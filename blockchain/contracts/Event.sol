@@ -24,7 +24,7 @@ contract Event is ERC721 {
 
     event ticketSold(address eventId, uint ticketId, address buyerAddress);
 
-    constructor(string memory _eventName, uint32  _dateOfEvent, string memory _location, uint32 _maxNumOfTickets, uint256 _ticketPrice, address payable _eventOrganiser, address _factoryAddress ) ERC721("EventTicket","ET")
+    constructor(string memory _eventName, uint32  _dateOfEvent, string memory _location, uint32 _maxNumOfTickets, uint256 _ticketPrice, address payable _eventOrganiser ) ERC721("EventTicket","ET")
     {
         eventName = _eventName;
         dateOfEvent = _dateOfEvent;
@@ -32,7 +32,7 @@ contract Event is ERC721 {
         maxNumOfTickets = _maxNumOfTickets;
         ticketPrice = _ticketPrice;
         eventOrganiser = _eventOrganiser;
-        factoryAddress = _factoryAddress;
+        // factoryAddress = _factoryAddress;
     }
 
     function mint() public payable returns(bool) {
