@@ -1,0 +1,15 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# get all events
+GET {{ baseURL }}/events
+
+###
+# get all events for an organiser
+GET {{ baseURL }}/events?owner=0x51a9aFb7256C7A1BCda78541BE64A96E9B817DF6
+
+###
+# get event by event address
+GET {{ baseURL }}/events/0x005607d38a210Eb1bde7A2d51356c3B33046f0F7
+
