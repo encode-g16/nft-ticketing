@@ -1,0 +1,44 @@
+openapi: 3.0.1
+info:
+  title: NFT Ticketing API
+  description: API provides endpoints to get event data
+  version: "0.1"
+servers:
+  - url: http://localhost:3000
+paths:
+  /events:
+    get:
+      description: Auto generated using Swagger Inspector
+      parameters:
+        - name: owner
+          in: query
+          schema:
+            type: string
+          example: example-owner-address-1
+      responses:
+        "200":
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: http://localhost:3000
+    servers:
+      - url: http://localhost:3000
+  /events/example-contract-address-1:
+    get:
+      description: Auto generated using Swagger Inspector
+      responses:
+        "200":
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: http://localhost:3000
+    servers:
+      - url: http://localhost:3000
