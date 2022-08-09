@@ -54,6 +54,7 @@ contract Event is ERC721 {
         _mint(msg.sender, newTicketId);
 
         emit TicketSold(msg.sender, newTicketId);
+
         return true;
     }
 
@@ -146,5 +147,15 @@ contract Event is ERC721 {
         }
 
         return SignatureParts(r, s, v);
+    }
+
+    function withdraw() public onlyOwner {
+        (bool sent, ) = msg.sender.call{value: address(this).balance}("");
+        require(sent, "failed to withdraw");
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "must be owner");
+        _;
     }
 }

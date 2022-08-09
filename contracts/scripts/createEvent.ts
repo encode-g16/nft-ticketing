@@ -2,8 +2,9 @@ import { BigNumber, ethers } from "ethers";
 import * as EventContractFactoryJson from "../artifacts/contracts/EventContractFactory.sol/EventContractFactory.json";
 import { EventContractFactory } from "../typechain-types";
 import { getWallet, getRopstenProvider } from "../utils";
+import * as EventABI from "../artifacts/contracts/EventContractFactory.sol/EventContractFactory.json";
 
-const eventFactoryAddress = "0xc5a63195951Fa3c2c9870edF5C5808C04c1DeD4d";
+const eventFactoryAddress = "0xf99F908CbE90B1a6eb86Df5F561F20910c3A9a38";
 const eventName = "GopherCon";
 const location = "London";
 const date = new Date(2023, 1, 1, 0, 0, 0, 0);
@@ -21,6 +22,15 @@ async function main() {
     signer
   ) as EventContractFactory;
 
+  console.log("setting up listeners...");
+  const eventCreateFilter = eventCreatorContract.filters.EventCreation();
+  provider.once(eventCreateFilter, ({ topics, data }) => {
+    const iface = new ethers.utils.Interface(EventABI.abi);
+    const parsedLog = iface.parseLog({ topics, data });
+    console.log("PARSED LOG:", parsedLog);
+  });
+
+  console.log("creating new event...");
   const tx = await eventCreatorContract.createEvent(
     eventName,
     location,
@@ -29,6 +39,7 @@ async function main() {
     ticketPrice
   );
   await tx.wait();
+
   console.log(`event created with transaction hash ${tx.hash}`);
 }
 

@@ -12,7 +12,7 @@ contract EventContractFactory {
 
     event EventCreation(
         address indexed owner,
-        address contractAddress,
+        address indexed contractAddress,
         string name
     );
 
@@ -45,7 +45,8 @@ contract EventContractFactory {
     }
 
     function withdraw() public onlyAdmin {
-        payable(msg.sender).transfer(address(this).balance);
+        (bool sent, ) = msg.sender.call{value: address(this).balance}("");
+        require(sent, "failed to withdraw");
     }
 
     modifier onlyAdmin() {
