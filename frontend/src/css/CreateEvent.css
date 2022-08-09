@@ -1,0 +1,111 @@
+.create-event-form{
+    display: flex;
+    margin-top: 20px;
+}
+form{
+    border: 1px solid grey;
+    border-radius: 7px;
+    width: 50%;
+    margin: 0 auto;
+}
+h1{
+    margin-left: 10px;
+}
+.flex-container{
+    display: flex;
+    flex-flow: row wrap;
+}
+.item-full-width{
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: space-between;
+}
+.item-full-width input{
+    width: 80%;
+    padding: 10px;
+}
+.item-full-width label{
+    width: 20%;
+    padding: 10px;
+}
+.flex-container-half{
+    display: flex;
+    width: 100%;
+}
+.item-half-width{
+    display: flex;
+    min-width: 0;
+    width: 50%;
+    justify-content: space-between;
+    padding: 10px;
+}
+.item-half-width input{
+    padding: 10px;
+    min-width: 0;
+    width:49%;
+}
+.item-half-width label{
+    padding: 10px;
+    width: 20%;
+    min-width: 0;
+}
+.custom-upload{
+  padding: 10px;
+}
+.checkbox{
+    width: 20px;
+    height: 20px;
+    margin: auto;
+}
+.item-full-width-checkbox{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+.item-full-width-checkbox label{
+    padding: 5px;
+    min-width: 0;
+}
+.flex-container-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+}
+
+.button-submit{
+    padding: 10px;
+    margin: 10px;
+    width: 20%;
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 1em;
+}
+.button-submit:hover{
+    background-color: darkgray;
+}
+.error{
+    color: red;
+    margin: 0 auto;
+}
+@media all and (max-width: 800px){
+    .flex-container{
+        display: block;
+    }
+    .item-full-width{
+        display: block;
+    }
+    .item-half-width{
+        display: block;
+    }
+    .item-full-width-checkbox{
+        display: block;
+    }
+}

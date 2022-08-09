@@ -1,0 +1,83 @@
+[
+    {
+        "eventName":"2022 Summer Beach Party",
+        "eventDate":"Fri, Aug 16, 11.59pm",
+        "description":"",
+        "location":"Club La Federico, Barcelona",
+        "price": "0.01",
+        "organiser": "0x4764e0eb62e55a2e8cb1d593588d2fc52cc0e89b",
+        "file":"beach-party.jpg"
+    },
+    {
+        "eventName":"Blockchain Entrepeneurs Networking Event",
+        "eventDate":"Thu, Sep 23, 17.00",
+        "description":"",
+        "location":"Barbican Center, London",
+        "price": "",
+        "organiser":"Blockchain Club",
+        "file":"blockchain.jpg"
+    },
+    {
+        "eventName":"E-commerce with Shopify",
+        "eventDate":"Wed, Aug 31, 19.00",
+        "description":"",
+        "location":"Vox Studios, London",
+        "price": "0.02",
+        "organiser":"0x4764e0eb62e55a2e8cb1d593588d2fc52cc0e89b",
+        "file":"ecommerce.jpg"
+    },
+    {
+        "eventName":"Open Coffee Startup Networking",
+        "eventDate":"Tue, Aug 23, 19.00",
+        "location":"Aticco Med, Barcelona",
+        "organiser":"Startup Accelerator",
+        "description": "",
+        "price": "0.02",
+        "file":"startup.jpg"
+    },
+    {
+        "eventName":"Barcelona Tech Job Fair",
+        "eventDate":"Thu, Nov 3, Full Day",
+        "description": "",
+        "location":"Ilunion Hotel Barcelona",
+        "price": "0.02",
+        "organiser":"Techmeetups.com",
+        "file":"techjobs.jpg"
+    },
+    {
+        "eventName":"Movies in the Park",
+        "eventDate":"Tue, Sep 28, 17.00",
+        "description": "",
+        "location":"Regent's Park, London",
+        "price": "0.02",
+        "organiser":"0x4764e0eb62e55a2e8cb1d593588d2fc52cc0e89b",
+        "file":"moviesinthepark.jpg"
+    },  
+    {
+        "eventName":"ETH Bogota",
+        "eventDate":"Fri, Oct 7-9, Full Day",
+        "location": "Bogota",
+        "description": "",
+        "price": "0.02",
+        "organiser":"ETH Global",
+        "file":"hackathon.jpg"
+    },
+    {
+        "eventName":"ETH India",
+        "eventDate":"Fri, Dec 2-4, Full Day",
+        "location":"Bengaluru",
+        "description": "",
+        "price": "0.02",
+        "organiser":"ETH Global",
+        "file": "hackathon2.jpg"
+    },
+    {
+        "eventName":"FutureTravel Summit 2022",
+        "eventDate":"Fri, Nov 4, 13.30",
+        "description": "",
+        "price": "",
+        "location":"Hyatt Regency Barcelona Tower",
+        "organiser":"0x4764e0eb62e55a2e8cb1d593588d2fc52cc0e89b",
+        "file":"travel.jpg"
+    }
+]
