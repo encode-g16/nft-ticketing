@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+html, body {
+  font-family: 'Montserrat', sans-serif;
+  width: 100vw;
+  overflow-x:hidden;
+}
+
+.menu-items {
+  transition: filter .3s;
+}
+
+.menu-items:hover {
+  filter: drop-shadow(0 0 0.75rem green);
+}
+
+.hero-container {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/public/event-hero.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.find-btn {
+  font-family:'Roboto',sans-serif;
+}
+
+.find-btn:hover {
+  color:#000000;
+  background-color:#FFFFFF;
+}
+
+.event-container-outer {
+  transition: box-shadow .3s;
+}
+
+.event-container-outer:hover {
+  box-shadow: 0 0 40px rgba(33,33,33,.2); 
+}
