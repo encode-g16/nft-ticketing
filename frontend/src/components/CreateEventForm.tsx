@@ -1,62 +1,66 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import useContract from '../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import * as EventContractFactoryJson from "../factoryAbi.json";
-import factoryContractAddress from '../factoryContractAddress';
+//import FactoryABI from '../abi';
+
 
 export interface FormData {
     eventName: string;
     eventDate: string;
     numTickets?: string;
     location: string;
+    description: string;
     price:string;
+    organiser:string;
     file?: File;
     checkbox?: boolean;
 }
 
 export default function CreateEventForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+    const onSubmit = handleSubmit((data) => {
+        console.log(JSON.stringify(data));
+    })
+
     const { account, active } = useWeb3React();
-    const factoryContract = useContract(factoryContractAddress, EventContractFactoryJson.abi);
+    //const FactoryContractAddress = '0x1240c96D19F298B8B75A06471C03539Aef0Eba77'; 
+    //const factoryContract = useContract(FactoryContractAddress, FactoryABI);
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [txHash, setTxHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const [txError, setTxError] = useState('');
-    const [eventAddress, setEventAddress] = useState('');
     const etherScanBase = 'https://rinkeby.etherscan.io/tx/'
 
-    async function deployEvent(data:FormData){
-        try {
-            setIsLoading(true);
-            //register transfer event from smart contract
-            factoryContract.removeAllListeners();
-            factoryContract.on("EventCreation", () => {
-                setSuccess(true);
-                setIsLoading(false);
-            })
+    // async function deployEvent(data:FormData){
+    //     try {
+    //         setIsLoading(true);
+    //         //register transfer event from smart contract
+    //         factoryContract.removeAllListeners();
+    //         factoryContract.on("Transfer", () => {
+    //             setSuccess(true);
+    //             setIsLoading(false);
+    //         })
 
-            //deploy the event
-            const costToDeployEvent = await factoryContract.fee();
-            const tx = await factoryContract.createEvent(data.eventDate, data.location, data.eventDate, data.numTickets, data.price, { value: ethers.utils.parseEther(costToDeployEvent) });
-            const receipt = await tx.wait(1);
-            const eventAddress = receipt.contractAddress;
-            setEventAddress(eventAddress);
-            setTxHash(receipt.transactionHash);
-        }
-        catch (error) {
-            console.log(error);
-            setErrorStatus(true);
-            setTxError("failed to mint");
-        }
-    }
+    //         const ticketPrice = await factoryContract.price();
+    //         const costToDeployEvent = await factoryContract.costToDeploy();
+    //         const tx = await factoryContract.mint(data.eventDate,data.eventDate,data.location,data.price,data.numTickets, { value: ethers.utils.parseEther(costToDeployEvent) });
+    //         const contractFactory = new ethers.ContractFactory(tokenJson.abi,tokenJson.bytecode,signer);
+   
 
-    const onSubmit = handleSubmit((data:FormData) => {
-        console.log(JSON.stringify(data));
-        deployEvent(data);
-    })
+  //            const contractFactory = await tokenFactory.deploy();
+  //            console.log("Awaiting confirmations");
+  //            await contractFactory.deployed();
+    //          setTxHash(tx.hash);
+    //     }
+    //     catch (error) {
+    //         console.log(error);
+    //         setErrorStatus(true);
+    //         setTxError("failed to mint");
+    //     }
+    // }
 
     return (
         <div className='max-h-full'>
@@ -139,7 +143,6 @@ export default function CreateEventForm() {
             {success && 
                 <>
                     <p>Your event is live!</p>
-                    <p>Address: {eventAddress}</p>
                     <a href={etherScanBase + txHash} target="_blank" rel="noreferrer">View on EtherScan</a>   
                 </> 
             }
