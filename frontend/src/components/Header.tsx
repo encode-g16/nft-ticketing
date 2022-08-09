@@ -17,7 +17,7 @@ const Header = () => {
       <div className="mx-auto md:block w-100 md:w-[300px]  h-[6rem] my-10 md:ml-8 xl:ml-12">
           <Link to={"/"}><img src="/blocktic_logo.png" alt="logo" className="h-full w-full" /></Link>
       </div>
-      <div className="block mr-[10%] md:ml-20 my-auto">
+      <div className="hidden md:block mr-[10%] md:ml-20 my-auto">
         <ul className="grid grid-cols-8 gap-5 xl:gap-14 xl:text-2xl font-bold text-center">
           <li className="cursor-pointer menu-items col-span-2"><Link to={"/create-event"}>Create Event</Link></li>
           <li className="cursor-pointer menu-items col-span-2"><Link to={"/my-created-events"}>My Created Events</Link>  </li>
