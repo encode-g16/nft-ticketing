@@ -4,6 +4,7 @@ import { EventContractFactory } from "../typechain-types";
 import { getWallet, getRopstenProvider } from "../utils";
 import * as EventABI from "../artifacts/contracts/EventContractFactory.sol/EventContractFactory.json";
 import { eventFactoryAddress } from "../eventFactoryContractAddress";
+import fs from "fs";
 
 //const eventFactoryAddress = "0xbd4498dA203c726858fC07687E4f17AF29cA071f";
 const eventName = "GopherCon";
@@ -43,6 +44,16 @@ async function main() {
     await tx.wait();
 
     console.log(`event created with transaction hash ${tx.hash} `);
+
+    //copy ABI into the front end folder
+    fs.copyFile(
+        "../contracts/artifacts/contracts/Event.sol/Event.json",
+        "../frontend/src/EventContractABI.json",
+        (err) => {
+            if (err) throw err;
+            console.log(err);
+        }
+    );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
