@@ -14,6 +14,15 @@ contract Event is ERC721 {
     uint256 public ticketPrice;
     address public owner;
 
+    // struct EventDetails {
+    //     string name;
+    //     uint256 date;
+    //     address contractAddress;
+    //     address ownerAddress;
+    //     uint256 price;
+    //     string location;
+    // }
+
     mapping(uint256 => bool) public redeemedTickets;
 
     event TicketSold(address indexed buyerAddress, uint256 ticketId);
@@ -61,6 +70,18 @@ contract Event is ERC721 {
     function remainingTickets() external view returns (uint256) {
         return maxNumOfTickets - ticketCounter.current();
     }
+
+    // function getEventDetails() external view returns (EventDetails memory) {
+    //     EventDetails memory e = EventDetails(
+    //         name(),
+    //         dateOfEvent,
+    //         address(this),
+    //         owner,
+    //         ticketPrice,
+    //         location
+    //     );
+    //     return e;
+    // }
 
     function verifyTicket(
         uint256 _id,

@@ -13,6 +13,7 @@
     "pretty": true,
     "sourceMap": true,
     "declaration": true,
+    "skipLibCheck": true,
     "outDir": "dist",
     "allowJs": true,
     "noEmit": false,
@@ -23,12 +24,13 @@
     "paths": {
       "@/*": ["*"],
       "@config": ["config"],
+      "@contracts/*": ["contracts/*"],
       "@controllers/*": ["controllers/*"],
       "@dtos/*": ["dtos/*"],
       "@exceptions/*": ["exceptions/*"],
       "@interfaces/*": ["interfaces/*"],
       "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
+      "@repositories/*": ["repositories/*"],
       "@routes/*": ["routes/*"],
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"]

@@ -6,13 +6,12 @@ import * as EventABI from "../artifacts/contracts/EventContractFactory.sol/Event
 import { eventFactoryAddress } from "../eventFactoryContractAddress";
 import fs from "fs";
 
-//const eventFactoryAddress = "0xbd4498dA203c726858fC07687E4f17AF29cA071f";
 const eventName = "GopherCon";
 const location = "London";
 const date = new Date(2023, 1, 1, 0, 0, 0, 0);
 console.log(`Date: ${date}`);
 const numberOfTickets = 1000;
-const ticketPrice = ethers.utils.parseEther("0.5");
+const ticketPrice = ethers.utils.parseEther("0.2");
 
 async function main() {
     const wallet = getWallet();
