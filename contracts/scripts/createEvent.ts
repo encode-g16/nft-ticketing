@@ -3,13 +3,14 @@ import * as EventContractFactoryJson from "../artifacts/contracts/EventContractF
 import { EventContractFactory } from "../typechain-types";
 import { getWallet, getRopstenProvider } from "../utils";
 import * as EventABI from "../artifacts/contracts/EventContractFactory.sol/EventContractFactory.json";
+import { LogDescription } from "@ethersproject/abi";
 
 const eventFactoryAddress = "0xf99F908CbE90B1a6eb86Df5F561F20910c3A9a38";
-const eventName = "GopherCon";
-const location = "London";
-const date = new Date(2023, 1, 1, 0, 0, 0, 0);
+const eventName = "AWS Summit";
+const location = "Manchester";
+const date = new Date(2023, 3, 10, 0, 0, 0, 0);
 const numberOfTickets = 1000;
-const ticketPrice = ethers.utils.parseEther("0.5");
+const ticketPrice = ethers.utils.parseEther("0.2");
 
 async function main() {
   const wallet = getWallet();
@@ -28,6 +29,8 @@ async function main() {
     const iface = new ethers.utils.Interface(EventABI.abi);
     const parsedLog = iface.parseLog({ topics, data });
     console.log("PARSED LOG:", parsedLog);
+
+    console.log("contract address:", parsedLog.args["contractAddress"]);
   });
 
   console.log("creating new event...");
