@@ -25,7 +25,7 @@ async function fetchEvent(eventId: string) {
 }
 
 export default function Event() {
-    //const { eventId } = useParams();
+    //const { id } = useParams();
     const { account, active } = useWeb3React();
     //const eventContract = useContract(eventId, FactoryABI);
     const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function Event() {
     const [txHash, setTxHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const [txError, setTxError] = useState('');
-    const etherScanBase = 'https://rinkeby.etherscan.io/tx/'
+    const etherScanBase = 'https://ropsten.etherscan.io/tx/';
     
 
     const price = event.price;
