@@ -4,8 +4,8 @@
             "contractAddress": "0xb10758Cc46edE1F5Ee89175547C07FF5Fa7b8EC2",
             "ownerAddress": "0x563529285A26A05a94646CA01F5f9b61f292941D",
             "name": "GopherCon",
-            "date": 1675209600000,
-            "price": "500000000000000000",
+            "date": "Wed Feb 01 2023",
+            "price": "0.5",
             "location": "London",
             "imageUrl": "/images/0xb10758Cc46edE1F5Ee89175547C07FF5Fa7b8EC2.jpeg"
         },
@@ -13,8 +13,8 @@
             "contractAddress": "0x7C167aC0106081Dfb1D565b87Ee147BF83E2Ca82",
             "ownerAddress": "0x563529285A26A05a94646CA01F5f9b61f292941D",
             "name": "AWS Summit",
-            "date": 1681081200000,
-            "price": "200000000000000000",
+            "date": "Mon Apr 10 2023",
+            "price": "0.2",
             "location": "Manchester",
             "imageUrl": "/images/0x7C167aC0106081Dfb1D565b87Ee147BF83E2Ca82.jpeg"
         }

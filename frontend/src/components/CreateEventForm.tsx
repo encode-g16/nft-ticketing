@@ -76,7 +76,7 @@ export default function CreateEventForm() {
             console.log(error);
             setIsLoading(false);
             setErrorStatus(true);
-            setTxError("Failed to mint ticket.");
+            setTxError("Failed to create event.");
         }
     }
 

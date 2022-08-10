@@ -27,7 +27,9 @@ contract EventContractFactory {
         uint256 _dateOfEvent,
         uint256 _maxNumOfTickets,
         uint256 _ticketPrice
-    ) public {
+    ) public payable {
+        require(msg.value >= fee, "incorrect amount paid");
+
         address eventAddress = address(
             new Event(
                 _eventName,

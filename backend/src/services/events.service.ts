@@ -31,7 +31,7 @@ class EventService {
           contractAddress: newEventContractAddress,
           ownerAddress,
           name,
-          date: date.toNumber(),
+          date: new Date(date.toNumber()).toDateString(),
           price: price.toString(),
           location,
           imageUrl: `/images/${newEventContractAddress}.jpeg`,
