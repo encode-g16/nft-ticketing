@@ -23,7 +23,7 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
     const [txHash, setTxHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const [txError, setTxError] = useState('');
-    const etherScanBase = 'https://rinkeby.etherscan.io/tx/'
+    const etherScanBase = 'https://ropsten.etherscan.io/tx/'
     const [selectedValue, setSelectedValue] = useState<string>("1");
     const [totalPrice, setTotalPrice] = useState<number|undefined>(0);
     const [event, setEvent] = useState<HomeEventProp|null>({
@@ -68,15 +68,15 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
     async function buyTicket(price: string | undefined) {
         if(price !== undefined){
             try {
+                setSuccess(false);
+                setTxHash('');
                 setIsLoading(true);
                 //register transfer event from smart contract
-                eventContract.removeAllListeners();
-                eventContract.on("TicketSold", () => {
-                    setSuccess(true);
-                    setIsLoading(false);
-                })
+  
                 const response = await eventContract.mint({ value: ethers.utils.parseEther(price)});
-                const receipt = response.wait(1);
+                const receipt = await response.wait(1);
+                setSuccess(true);
+                setIsLoading(false);
                 setTxHash(receipt.transactionHash);
                 }
             catch (error) {
@@ -103,6 +103,7 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
                     <p className="p-2 font-semibold col-span-1">Event Name:</p><p className="p-2 col-span-2 text-ellipsis overflow-hidden">{event?.name}</p>
                     {/* <p className="p-2 font-semibold col-span-1">Description:</p><p className="p-2 col-span-2">{""}</p> */}
                     <p className="p-2 font-semibold col-span-1">Organiser:</p><a href={etherScanAddressUrlBase + event?.ownerAddress} target="_blank" rel="noreferrer" className="p-2 col-span-2 text-ellipsis overflow-hidden underline text-blue-500">{event?.ownerAddress}</a>
+                    <p className="p-2 font-semibold col-span-1">Contract Address:</p><a href={etherScanAddressUrlBase + event?.contractAddress} target="_blank" rel="noreferrer" className="p-2 col-span-2 text-ellipsis overflow-hidden underline text-blue-500">{event?.contractAddress}</a>
                     <p className="p-2 font-semibold col-span-1">Location:</p><p className="p-2 col-span-2">{event?.location}</p>
                     <p className="p-2 font-semibold col-span-1">Date (mm/dd/yy):</p><p className="p-2 col-span-2">{event?.date}</p>
                     {/* <p className="p-2 font-semibold col-span-1">Time:</p><p className="p-2 col-span-2">{event.time}</p> */}
@@ -133,7 +134,7 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
                         >Buy Ticket
                     </button>  
                 </div>
-                {isLoading && <p className="block text-center text-md">Hang tight, minting your ticket...</p>}
+                {isLoading && <p className="block text-center text-md">Please confirm in metamask and await for block confirmation</p>}
                 {success && 
                     <>
                         <p className="block text-center text-md">Your ticket has been minted!</p>

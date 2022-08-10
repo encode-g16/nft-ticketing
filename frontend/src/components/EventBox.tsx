@@ -7,11 +7,12 @@ export interface EventProp {
   location: string;
   description?: string;
   price:string;
+  contractAddress: string;
   organiser:string;
   file: string;
 }
 
-const EventBox = ({eventName, eventDate, location, description, price, organiser, file}:EventProp) => {
+const EventBox = ({eventName, eventDate, location, contractAddress, description, price, organiser, file}:EventProp) => {
 
   const imagePrefix = "http://localhost:4000"
  
@@ -26,6 +27,7 @@ const EventBox = ({eventName, eventDate, location, description, price, organiser
           <p className="px-6 text-xl font-semibold pb-3 text-indigo-600 text-ellipsis overflow-hidden">{eventDate}</p>
           <p className=" px-6 text-xl pb-3 text-slate-500 text-ellipsis overflow-hidden">{location}</p>
           <p className="px-6 text-xl pb-5 text-slate-500 text-ellipsis overflow-hidden">{price? `${price} ETH` : `Free`}</p>
+          <p className="px-6 text-xl pb-5 text-slate-500 text-ellipsis overflow-hidden">Contract Address: {contractAddress}</p>
           <p className="px-6 text-xl pb-5 text-slate-500 text-ellipsis overflow-hidden">Organiser: {organiser}</p>
     </div>
   )

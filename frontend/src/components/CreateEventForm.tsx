@@ -21,6 +21,7 @@ export default function CreateEventForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const onSubmit = handleSubmit((data:FormData) => {
         console.log(JSON.stringify(data));
+
         deployEvent(data);
     })
 
@@ -35,7 +36,7 @@ export default function CreateEventForm() {
     const [eventContractAddress, setEventContractAddress] = useState('');
     const etherScanBase = 'https://ropsten.etherscan.io/tx/'
 
-    async function deployEvent(data:FormData){
+    async function deployEvent(dataForm:any){
         try {
             setIsLoading(true);
             setShowForm(false);
@@ -45,15 +46,15 @@ export default function CreateEventForm() {
             //depoy event, paying the protocol fee
             const costToDeployEvent = await factoryContract.fee();
             console.log(`Fee is ${costToDeployEvent}`);
-            const passedMonth = Number(data.eventDate.slice(0,2));
-            const passedDay = Number(data.eventDate.slice(3,5));
-            const passedYear = Number(`20${data.eventDate.slice(6,8)}`);
+            const passedMonth = Number(dataForm.eventDate.slice(0,2));
+            const passedDay = Number(dataForm.eventDate.slice(3,5));
+            const passedYear = Number(`20${dataForm.eventDate.slice(6,8)}`);
             const date = new Date(passedYear,passedMonth,passedDay);
-            const eventPrice = ethers.utils.parseEther(data.price);
+            const eventPrice = ethers.utils.parseEther(dataForm.price);
             console.log(`DateObj: ${date}`)
             const dateTime = date.getTime();
             console.log(`Datetime: ${dateTime}`);
-            const response = await factoryContract.createEvent(data.eventName,data.location,dateTime,Number(data.numTickets),eventPrice, {value: costToDeployEvent});
+            const response = await factoryContract.createEvent(dataForm.eventName,dataForm.location,dateTime,Number(dataForm.numTickets),eventPrice, {value: costToDeployEvent});
             console.log("Awaiting confirmations...");
             const receipt = await response.wait(1);
             console.log("Mined.");
@@ -64,11 +65,26 @@ export default function CreateEventForm() {
 
             //setup event listening to get event contract address
             const eventCreateFilter = factoryContract.filters.EventCreation();
-            library.once(eventCreateFilter, ({ topics, data}: {topics:any ; data:any} ) => {
+            library.once(eventCreateFilter, async ({ topics, data}: {topics:any ; data:any} ) => {
                 const iface = new ethers.utils.Interface(FactoryABI.abi);
                 const parsedLog = iface.parseLog({ topics, data });
                 console.log("PARSED LOG:", parsedLog);
                 console.log(`Event contract address: ${parsedLog.args.contractAddress}`);
+
+                if (!dataForm.file) {
+                    throw new Error("Missing image")
+                }
+
+                const formData = new FormData();
+                formData.append("image", dataForm.file[0]);
+        
+                const res = await fetch(`http://localhost:4000/events/${parsedLog.args.contractAddress}/image`, {
+                    method: "POST",
+                    body: formData,
+                }).then((res) => res.json());
+
+                console.log(res)
+
                 setEventContractAddress(parsedLog.args.contractAddress);
             });
         }

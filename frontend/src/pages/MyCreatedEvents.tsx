@@ -80,7 +80,7 @@ const MyCreatedEvents = () => {
         
           {(account && myEvents!.length>0) ?
           (<div className="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-2 gap-5 mx-5 sm:mx-16">
-            {myEvents!.map(({contractAddress, name, date, location, price, ownerAddress, imageUrl}) => <Link to={`/events/:${contractAddress}`} key={contractAddress}><EventBox key={contractAddress} eventName={name} eventDate={date} location={location} price={price} organiser={ownerAddress} file={imageUrl}/></Link>)}
+            {myEvents!.map(({contractAddress, name, date, location, price, ownerAddress, imageUrl}) => <Link to={`/events/:${contractAddress}`} key={contractAddress}><EventBox key={contractAddress} eventName={name} eventDate={date} location={location} price={price} organiser={ownerAddress} contractAddress={contractAddress} file={imageUrl}/></Link>)}
           </div>)
           : <div className="text-center"><p>No events to display</p></div>
           }

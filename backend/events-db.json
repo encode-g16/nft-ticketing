@@ -1,22 +1,22 @@
 {
     "events": {
-        "0xb10758Cc46edE1F5Ee89175547C07FF5Fa7b8EC2": {
-            "contractAddress": "0xb10758Cc46edE1F5Ee89175547C07FF5Fa7b8EC2",
-            "ownerAddress": "0x563529285A26A05a94646CA01F5f9b61f292941D",
-            "name": "GopherCon",
-            "date": "Wed Feb 01 2023",
-            "price": "0.5",
-            "location": "London",
-            "imageUrl": "/images/0xb10758Cc46edE1F5Ee89175547C07FF5Fa7b8EC2.jpeg"
-        },
-        "0x7C167aC0106081Dfb1D565b87Ee147BF83E2Ca82": {
-            "contractAddress": "0x7C167aC0106081Dfb1D565b87Ee147BF83E2Ca82",
+        "0x2260CC6EEF60deade954fBcEE167e82bd36F39F6": {
+            "contractAddress": "0x2260CC6EEF60deade954fBcEE167e82bd36F39F6",
             "ownerAddress": "0x563529285A26A05a94646CA01F5f9b61f292941D",
             "name": "AWS Summit",
             "date": "Mon Apr 10 2023",
             "price": "0.2",
             "location": "Manchester",
-            "imageUrl": "/images/0x7C167aC0106081Dfb1D565b87Ee147BF83E2Ca82.jpeg"
+            "imageUrl": "/images/0x2260CC6EEF60deade954fBcEE167e82bd36F39F6.jpeg"
+        },
+        "0x04eF9647467C65fcFbb1CAEA2157204965198b55": {
+            "contractAddress": "0x04eF9647467C65fcFbb1CAEA2157204965198b55",
+            "ownerAddress": "0x563529285A26A05a94646CA01F5f9b61f292941D",
+            "name": "ComicCon",
+            "date": "Mon Dec 11 2023",
+            "price": "0.01",
+            "location": "Liverpool",
+            "imageUrl": "/images/0x04eF9647467C65fcFbb1CAEA2157204965198b55.jpeg"
         }
     }
 }

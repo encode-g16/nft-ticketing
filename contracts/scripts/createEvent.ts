@@ -4,7 +4,7 @@ import { EventContractFactory } from "../typechain-types";
 import { getWallet, getRopstenProvider } from "../utils";
 import * as EventABI from "../artifacts/contracts/EventContractFactory.sol/EventContractFactory.json";
 
-const eventFactoryAddress = "0xf99F908CbE90B1a6eb86Df5F561F20910c3A9a38";
+const eventFactoryAddress = "0x5A81B232208ad469F357432389e1514E1395Bf46";
 const eventName = "AWS Summit";
 const location = "Manchester";
 const date = new Date(2023, 3, 10, 0, 0, 0, 0);
@@ -38,7 +38,8 @@ async function main() {
     location,
     date.getTime(),
     numberOfTickets,
-    ticketPrice
+    ticketPrice,
+    { value: ethers.utils.parseEther("0.1") }
   );
   await tx.wait();
 

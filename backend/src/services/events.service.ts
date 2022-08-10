@@ -32,7 +32,7 @@ class EventService {
           ownerAddress,
           name,
           date: new Date(date.toNumber()).toDateString(),
-          price: price.toString(),
+          price: ethers.utils.formatEther(price.toString()),
           location,
           imageUrl: `/images/${newEventContractAddress}.jpeg`,
         };
