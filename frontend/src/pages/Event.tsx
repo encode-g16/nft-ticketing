@@ -8,16 +8,16 @@ import { ethers } from 'ethers';
 import {HomeEventProp} from './Home';
 import { RouteComponentProps,matchPath } from 'react-router';
   //temporary data until we have the API to call
-const event = {
-    title: "Eth Hackathon",
-    description: "Come and build the future of DeFi on Ethereum. Prize money of £20,000!",
-    organiser: "Eth Global",
-    location: "212 Hackney Road, London, E1 2AP, UK",
-    date: "01/01/20",
-    time: "19:00",
-    imageUrl: "/hackathon.jpg",
-    price: 0.05
-}
+// const event = {
+//     title: "Eth Hackathon",
+//     description: "Come and build the future of DeFi on Ethereum. Prize money of £20,000!",
+//     organiser: "Eth Global",
+//     location: "212 Hackney Road, London, E1 2AP, UK",
+//     date: "01/01/20",
+//     time: "19:00",
+//     imageUrl: "/hackathon.jpg",
+//     price: 0.05
+// }
 
 // async function fetchEvent(eventId: string) {
 //     const ApiUrl = "www.api.com/events/" + eventId;
@@ -78,6 +78,7 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
         setTotalPrice(Number(total.toFixed(2)));
     }
 
+    const imagePrefix = "http://localhost:4000"
 
     // async function buyTicket(){
     //     try {
@@ -106,8 +107,8 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
 
         {!isLoading &&
         <div className="block mx-auto md:grid md:grid-cols-4 md:gap-10 md:max-w-screen-lg">
-            <img src={event?.imageUrl} alt="event banner" 
-            className="block mx-2 overflow-hidden md:col-span-2 rounded-md border border-gray-400 shadow-lg"/>
+            <img src={`${imagePrefix}${event?.imageUrl}`} crossOrigin="anonymous" alt="event banner" 
+            className="block mx-2 overflow-hidden md:col-span-2 rounded-md border border-gray-400 shadow-lg w-full h-full"/>
 
             <div className='mx-2 mt-5 border border-gray-400 rounded-md shadow-lg block md:col-span-2 md:mt-0'>
                 <h1 className='p-2 m-0 text-center text-lg text-white bg-blue-600 font-semibold rounded-t-md'>{event?.name}</h1>
