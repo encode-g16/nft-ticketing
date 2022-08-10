@@ -3,69 +3,88 @@ import { useForm } from 'react-hook-form';
 import useContract from '../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-//import FactoryABI from '../abi';
-
+import FactoryABI from '../FactoryABI.json';
+import { eventFactoryAddress } from '../eventFactoryContractAddress';
 
 export interface FormData {
     eventName: string;
     eventDate: string;
     numTickets?: string;
     location: string;
-    description: string;
     price:string;
-    organiser:string;
     file?: File;
     checkbox?: boolean;
 }
 
+
 export default function CreateEventForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-    const onSubmit = handleSubmit((data) => {
+    const onSubmit = handleSubmit((data:FormData) => {
         console.log(JSON.stringify(data));
+        deployEvent(data);
     })
 
-    const { account, active } = useWeb3React();
-    //const FactoryContractAddress = '0x1240c96D19F298B8B75A06471C03539Aef0Eba77'; 
-    //const factoryContract = useContract(FactoryContractAddress, FactoryABI);
+    const { active, library } = useWeb3React();
+    const factoryContract = useContract(eventFactoryAddress, FactoryABI.abi);
     const [isLoading, setIsLoading] = useState(false);
+    const [showForm, setShowForm] = useState(true);
     const [success, setSuccess] = useState(false);
     const [txHash, setTxHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const [txError, setTxError] = useState('');
-    const etherScanBase = 'https://rinkeby.etherscan.io/tx/'
+    const [eventContractAddress, setEventContractAddress] = useState('');
+    const etherScanBase = 'https://ropsten.etherscan.io/tx/'
 
-    // async function deployEvent(data:FormData){
-    //     try {
-    //         setIsLoading(true);
-    //         //register transfer event from smart contract
-    //         factoryContract.removeAllListeners();
-    //         factoryContract.on("Transfer", () => {
-    //             setSuccess(true);
-    //             setIsLoading(false);
-    //         })
+    async function deployEvent(data:FormData){
+        try {
+            setIsLoading(true);
+            setShowForm(false);
+            //register transfer event from smart contract
+            factoryContract.removeAllListeners();
 
-    //         const ticketPrice = await factoryContract.price();
-    //         const costToDeployEvent = await factoryContract.costToDeploy();
-    //         const tx = await factoryContract.mint(data.eventDate,data.eventDate,data.location,data.price,data.numTickets, { value: ethers.utils.parseEther(costToDeployEvent) });
-    //         const contractFactory = new ethers.ContractFactory(tokenJson.abi,tokenJson.bytecode,signer);
-   
+            //depoy event, paying the protocol fee
+            const costToDeployEvent = await factoryContract.fee();
+            console.log(`Fee is ${costToDeployEvent}`);
+            const passedMonth = Number(data.eventDate.slice(0,2));
+            const passedDay = Number(data.eventDate.slice(3,5));
+            const passedYear = Number(`20${data.eventDate.slice(6,8)}`);
+            const date = new Date(passedYear,passedMonth,passedDay);
+            const eventPrice = ethers.utils.parseEther(data.price);
+            console.log(`DateObj: ${date}`)
+            const dateTime = date.getTime();
+            console.log(`Datetime: ${dateTime}`);
+            const response = await factoryContract.createEvent(data.eventName,data.location,dateTime,Number(data.numTickets),eventPrice, {value: costToDeployEvent});
+            console.log("Awaiting confirmations...");
+            const receipt = await response.wait(1);
+            console.log("Mined.");
+            setSuccess(true);
+            setIsLoading(false);
+            setTxHash(receipt.transactionHash);
+            console.log(`Txn hash: ${receipt.transactionHash}`);
 
-  //            const contractFactory = await tokenFactory.deploy();
-  //            console.log("Awaiting confirmations");
-  //            await contractFactory.deployed();
-    //          setTxHash(tx.hash);
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //         setErrorStatus(true);
-    //         setTxError("failed to mint");
-    //     }
-    // }
+            //setup event listening to get event contract address
+            const eventCreateFilter = factoryContract.filters.EventCreation();
+            library.once(eventCreateFilter, ({ topics, data}: {topics:any ; data:any} ) => {
+                const iface = new ethers.utils.Interface(FactoryABI.abi);
+                const parsedLog = iface.parseLog({ topics, data });
+                console.log("PARSED LOG:", parsedLog);
+                console.log(`Event contract address: ${parsedLog.args.contractAddress}`);
+                setEventContractAddress(parsedLog.args.contractAddress);
+            });
+        }
+        catch (error) {
+            console.log(error);
+            setIsLoading(false);
+            setErrorStatus(true);
+            setTxError("Failed to mint ticket.");
+        }
+    }
 
     return (
         <div className='max-h-full'>
+            {!active && <p className="block text-center text-lg mb-5 bg-orange-300 ">Please connect your metamask to create an event.</p>}
             {/*show form initially*/}
-            {!isLoading &&
+            {showForm && 
             <form onSubmit={onSubmit}
             className="w-1/2 h-1/2 border border-gray-300  bg-white rounded-md shadow-md mx-auto"
             >
@@ -138,15 +157,18 @@ export default function CreateEventForm() {
                     <button type="submit" className="block p-2 mx-auto md:m-2 md:col-span-4  bg-blue-600 text-center text-lg rounded-md text-white font-semibold hover:bg-blue-700">Create Event</button>
                 </div>
             </form>
-            } {/*end of form*/}
-            {isLoading && <p>Hang tight, creating your event on chain...</p>}
+            } {/*end of !isLoading switch*/}
+            {isLoading && <p className="block text-center text-lg">Please confirm the transaction in MetaMask and wait...</p>}
             {success && 
-                <>
-                    <p>Your event is live!</p>
-                    <a href={etherScanBase + txHash} target="_blank" rel="noreferrer">View on EtherScan</a>   
-                </> 
+                <div className='grid grid-cols-1 '>
+                    <p className="block text-center text-lg">Your event is live!</p>
+                    <p className="block text-center text-lg">Contract address: {eventContractAddress}</p>
+                    <a href={etherScanBase + txHash} target="_blank" rel="noreferrer"
+                    className="block text-center text-lg underline text-blue-500">View on EtherScan</a>   
+                </div> 
             }
-            {errorStatus && <p>{txError}</p>}
+            {errorStatus && <p className="block text-center text-lg">{txError}</p>}
+           
         </div>
     )
 }
