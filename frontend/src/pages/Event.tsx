@@ -51,13 +51,12 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
       
         useEffect(() => {
         const fetchData = async () => {
-          const data = await fetch(`http://localhost:4000/events`, {
+          const data = await fetch(`http://localhost:4000/events/${routeId}`, {
               method: "GET",
           })
           const json = await data.json();
-          const singleEvent = json.events.filter(({contractAddress}:{contractAddress: string}) => contractAddress?.toLowerCase() === routeId.toLowerCase())
-          setEvent(singleEvent[0])
-          console.log(singleEvent[0])
+        //   const singleEvent = json.events.filter(({contractAddress}:{contractAddress: string}) => contractAddress?.toLowerCase() === routeId.toLowerCase())
+          setEvent(json)
         }
         fetchData().catch(err => console.log(err));
       },[])
