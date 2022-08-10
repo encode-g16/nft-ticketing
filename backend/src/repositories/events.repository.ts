@@ -15,7 +15,7 @@ const eventsRepo: Event[] = [
     ownerAddress: '0xdAe11CeE59C59b2Daa47906BCcAbadDB15404Dd1',
     name: 'AWS Summit',
     date: new Date(Date.now()).toDateString(),
-    imageUrl: '/images/0x005607d38a210Eb1bde7A2d51356c3B33046f0F7.png',
+    imageUrl: '/images/0x005607d38a210Eb1bde7A2d51356c3B33046f0F7.webp',
     location: 'Manchester',
     price: '0.2',
   },
