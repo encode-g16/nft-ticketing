@@ -4,40 +4,28 @@ import Header from '../components/Header';
 import { useWeb3React } from '@web3-react/core';
 import useContract from '../hooks/useContract';
 import { ethers } from 'ethers';
-//import FactoryABI from '../abi';
-import {HomeEventProp} from './Home';
-import { RouteComponentProps,matchPath } from 'react-router';
-  //temporary data until we have the API to call
-// const event = {
-//     title: "Eth Hackathon",
-//     description: "Come and build the future of DeFi on Ethereum. Prize money of £20,000!",
-//     organiser: "Eth Global",
-//     location: "212 Hackney Road, London, E1 2AP, UK",
-//     date: "01/01/20",
-//     time: "19:00",
-//     imageUrl: "/hackathon.jpg",
-//     price: 0.05
-// }
+import EventContractABI from '../EventContractABI.json';
+import { HomeEventProp } from './Home';
+import { RouteComponentProps, matchPath } from 'react-router';
+const etherScanAddressUrlBase = 'https://ropsten.etherscan.io/address/';
 
-// async function fetchEvent(eventId: string) {
-//     const ApiUrl = "www.api.com/events/" + eventId;
-//     const response = await fetch(ApiUrl);
-//     return response;
-// }
 interface RouteParams {
     id: string, 
 }
 
 export default function Event(props:RouteComponentProps<RouteParams>) {
-    const routeId = props.match.params!.id.slice(1)
+    const routeId = props.match.params!.id.slice(1);
+    const contractAddress = routeId;
     const { account, active } = useWeb3React();
-    //const eventContract = useContract(eventId, FactoryABI);
+    const eventContract = useContract(contractAddress,EventContractABI.abi);
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [txHash, setTxHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const [txError, setTxError] = useState('');
     const etherScanBase = 'https://rinkeby.etherscan.io/tx/'
+    const [selectedValue, setSelectedValue] = useState<string>("1");
+    const [totalPrice, setTotalPrice] = useState<number|undefined>(0);
     const [event, setEvent] = useState<HomeEventProp|null>({
         contractAddress: '',
         name: '',
@@ -49,63 +37,61 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
         imageUrl: '',
       })
       
-        useEffect(() => {
-        const fetchData = async () => {
-          const data = await fetch(`http://localhost:4000/events/${routeId}`, {
-              method: "GET",
-          })
-          const json = await data.json();
-        //   const singleEvent = json.events.filter(({contractAddress}:{contractAddress: string}) => contractAddress?.toLowerCase() === routeId.toLowerCase())
-          setEvent(json)
-        }
-        fetchData().catch(err => console.log(err));
-      },[])
+    useEffect(() => {
+    const fetchData = async () => {
+        const data = await fetch(`http://localhost:4000/events/${routeId}`, {
+            method: "GET",
+        })
+        const json = await data.json();
+    //   const singleEvent = json.events.filter(({contractAddress}:{contractAddress: string}) => contractAddress?.toLowerCase() === routeId.toLowerCase())
+        setEvent(json)
+    }
+    fetchData().catch(err => console.log(err));
+    },[])
 
-    
-    const price = event?.price;
-    //uncomment this line to use the API
-    //const event = fetchEvent(eventId);
-    
-    const [selectedValue, setSelectedValue] = useState<string>("1");
-    const [totalPrice, setTotalPrice] = useState<number|undefined>(0);
-    
+    useEffect(() => {
+        calcTotalPrice(event?.price);
+    })
+
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         setSelectedValue(event.target.value);
     }
 
-    const calcTotalPrice = (pricePerTicket: number) => {
+    const calcTotalPrice = (pricePerTicketString: string | undefined) => {
+        const pricePerTicket = Number(pricePerTicketString);
         const total = pricePerTicket * Number(selectedValue);
         setTotalPrice(Number(total.toFixed(2)));
     }
 
     const imagePrefix = "http://localhost:4000"
 
-    // async function buyTicket(){
-    //     try {
-    //         setIsLoading(true);
-    //         //register transfer event from smart contract
-    //         eventContract.removeAllListeners();
-    //         eventContract.on("Transfer", () => {
-    //             setSuccess(true);
-    //             setIsLoading(false);
-    //         })
-    //         const tx = await eventContract.mint(data.eventDate,data.eventDate,data.location,data.price,data.numTickets, { value: ethers.utils.parseEther(costToDeployEvent) });
-    //         setTxHash(tx.hash);
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //         setErrorStatus(true);
-    //         setTxError("failed to mint");
-    //     }
-    // }
+    async function buyTicket(price: string | undefined) {
+        if(price !== undefined){
+            try {
+                setIsLoading(true);
+                //register transfer event from smart contract
+                eventContract.removeAllListeners();
+                eventContract.on("TicketSold", () => {
+                    setSuccess(true);
+                    setIsLoading(false);
+                })
+                const response = await eventContract.mint({ value: ethers.utils.parseEther(price)});
+                const receipt = response.wait(1);
+                setTxHash(receipt.transactionHash);
+                }
+            catch (error) {
+                console.log(error);
+                setErrorStatus(true);
+                setTxError("Failed to mint ticket.");
+            }
+        }
+    }
 
   return (
     <div className='max-h-full'>
         <header>
             <Header/>
         </header>
-
-        {!isLoading &&
         <div className="block mx-auto md:grid md:grid-cols-4 md:gap-10 md:max-w-screen-lg">
             <img src={`${imagePrefix}${event?.imageUrl}`} crossOrigin="anonymous" alt="event banner" 
             className="block mx-2 overflow-hidden md:col-span-2 rounded-md border border-gray-400 shadow-lg w-full h-full"/>
@@ -115,17 +101,17 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
                 <hr/>
                 <div className="grid grid-cols-3 gap-0">
                     <p className="p-2 font-semibold col-span-1">Event Name:</p><p className="p-2 col-span-2 text-ellipsis overflow-hidden">{event?.name}</p>
-                    <p className="p-2 font-semibold col-span-1">Description:</p><p className="p-2 col-span-2">{""}</p>
-                    <p className="p-2 font-semibold col-span-1">Organiser:</p><p className="p-2 col-span-2 text-ellipsis overflow-hidden">{event?.ownerAddress}</p>
+                    {/* <p className="p-2 font-semibold col-span-1">Description:</p><p className="p-2 col-span-2">{""}</p> */}
+                    <p className="p-2 font-semibold col-span-1">Organiser:</p><a href={etherScanAddressUrlBase + event?.ownerAddress} target="_blank" rel="noreferrer" className="p-2 col-span-2 text-ellipsis overflow-hidden underline text-blue-500">{event?.ownerAddress}</a>
                     <p className="p-2 font-semibold col-span-1">Location:</p><p className="p-2 col-span-2">{event?.location}</p>
                     <p className="p-2 font-semibold col-span-1">Date (mm/dd/yy):</p><p className="p-2 col-span-2">{event?.date}</p>
                     {/* <p className="p-2 font-semibold col-span-1">Time:</p><p className="p-2 col-span-2">{event.time}</p> */}
                     <p className="p-2 font-semibold col-span-1">Price per Ticket (ETH):</p><p className="p-2 col-span-2">{event?.price}</p>
                 </div>
             </div>
-            <div className='mx-2 block md:col-start-3 md:col-span-2 border border-gray-400 rounded-md shadow-lg'>
+            <div className='mx-2 block md:col-start-3 md:col-span-2 '>
                 <div className='block md:grid md:grid-cols-4 md:gap-2'>
-                    <label className='p-2 font-semibold col-span-1' htmlFor="number-of-tickets">Number of Tickets:</label>
+                    {/* <label className='p-2 font-semibold col-span-1' htmlFor="number-of-tickets">Number of Tickets:</label>
                     <select value={selectedValue} onChange={handleChange}
                     className="w-[50px] p-2 m-2 rounded-lg col-span-1" name="number-of-tickets" id="number-of-tickets">
                         <option value="1" className="">1</option>
@@ -139,25 +125,23 @@ export default function Event(props:RouteComponentProps<RouteParams>) {
                         <option value="9">9</option>
                         <option value="10">10</option>
                     </select>
-                    <label className='p-2'>Total: {totalPrice?.toFixed(2)} ETH</label>
+                    <label className='p-2'>Total: {totalPrice?.toFixed(2)} ETH</label> */}
                     <button type="submit" 
                         className="p-2 m-2 rounded-lg bg-blue-600 text-white 
-                        col-span-1 font-semibold hover:bg-blue-700 shadow-md"
-                        >Buy
+                        col-span-4 font-semibold hover:bg-blue-700 shadow-md"
+                        onClick={() => buyTicket(event?.price)}
+                        >Buy Ticket
                     </button>  
                 </div>
+                {isLoading && <p className="block text-center text-md">Hang tight, minting your ticket...</p>}
+                {success && 
+                    <>
+                        <p className="block text-center text-md">Your ticket has been minted!</p>
+                        <p className="block text-center text-md">Transaction Hash: <a href={etherScanBase + txHash} className="underline text-blue-500 text-lg">{txHash}</a></p>
+                    </>
+                }
             </div>
-
-
         </div> 
-        } {/* end of !isLoading */}
-        {isLoading && <p>Hang tight, minting your ticket...</p>}
-        {success && 
-            <>
-                <p>Your ticket has been minted!</p>
-                <p>Transaction Hash: <a href={etherScanBase + txHash}>{txHash}</a></p>
-            </>
-        }
     </div>
   )
 }
