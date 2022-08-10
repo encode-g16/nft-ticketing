@@ -1,6 +1,6 @@
 export interface Event {
   name: string;
-  date: number;
+  date: string;
   contractAddress: string;
   ownerAddress: string;
   imageUrl: string;

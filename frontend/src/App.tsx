@@ -28,9 +28,8 @@ export default function App() {
             <Route exact path="/create-event">
               <CreateEvent />
             </Route>
-            <Route path="/events/:id">
-              <Event />
-            </Route>
+            <Route path="/events/:id" component={Event}>
+            </Route> 
             <Route path="/my-created-events">
               <MyCreatedEvents />
             </Route>
