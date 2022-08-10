@@ -5,7 +5,7 @@ export interface EventProp {
   eventName: string;
   eventDate: string;
   location: string;
-  description: string;
+  description?: string;
   price:string;
   organiser:string;
   file: string;

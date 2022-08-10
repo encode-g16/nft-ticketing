@@ -2,18 +2,50 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header';
 import eventData from '../MockEventData.json';
 import EventBox, { EventProp } from '../components/EventBox';
+import { Link } from 'react-router-dom';
+import { HomeEventProp } from './Home';
 
 const AllEvents = () => {
   const [input, setInput] = useState<string| undefined>(undefined);
-  const [filteredEvents, setFilteredEvents] = useState<EventProp[]>(eventData)
-  
+  const [eventData, setEventData] = useState<HomeEventProp[]|null>([{
+    contractAddress: '',
+    name: '',
+    date: '',
+    location: '',
+    description: '',
+    price:'',
+    ownerAddress: '',
+    imageUrl: '',
+  }])
+  const [filteredEvents, setFilteredEvents] = useState<HomeEventProp[]|null>([{
+    contractAddress: '',
+    name: '',
+    date: '',
+    location: '',
+    description: '',
+    price:'',
+    ownerAddress: '',
+    imageUrl: '',
+  }])
+
   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     let newInput = e.target.value.toLowerCase();
     setInput(newInput);
-    let userEvents = eventData.filter((event) => event.eventName.toLowerCase().includes(newInput))
+    let userEvents = eventData!.filter((event) => event.name.toLowerCase().includes(newInput))
     setFilteredEvents(userEvents)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetch(`http://localhost:4000/events`, {
+          method: "GET",
+      })
+      const json = await data.json();
+      setEventData(json.events)
+    }
+    fetchData().catch(err => console.log(err));
+  },[])
 
   return (
     <div>
@@ -32,8 +64,8 @@ const AllEvents = () => {
         <div className="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-2 gap-5 mx-5 sm:mx-16">
             {
               input
-              ? filteredEvents!.map(({eventName, eventDate, location, description, price, organiser, file}) => <EventBox eventName={eventName} eventDate={eventDate} location={location} price={price} organiser={organiser} description={description} file={file}/>)
-              : eventData.map(({eventName, eventDate, location, description, price, organiser, file}) => <EventBox eventName={eventName} eventDate={eventDate} location={location} price={price} organiser={organiser} description={description} file={file}/>)
+              ? filteredEvents!.map(({contractAddress, name, date, location, price, ownerAddress, imageUrl}) => <Link to={`/events/:${contractAddress}`} key={contractAddress}><EventBox key={contractAddress} eventName={name} eventDate={date} location={location} price={price} organiser={ownerAddress} file={imageUrl}/></Link>)
+              : eventData!.map(({contractAddress, name, date, location, price, ownerAddress, imageUrl}) => <Link to={`/events/:${contractAddress}`} key={contractAddress}><EventBox key={contractAddress} eventName={name} eventDate={date} location={location} price={price} organiser={ownerAddress} file={imageUrl}/></Link>)
             }
         </div>
 
