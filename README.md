@@ -1,6 +1,6 @@
 # NFT Ticketing Platform
 
-Encode final project - NFT ticketing platform
+Encode final project - NFT ticketing platform.
 
 
 ## High Level Plan
